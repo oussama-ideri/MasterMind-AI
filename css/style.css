@@ -1,0 +1,203 @@
+body {
+  background: #f1edd5;
+}
+
+.container-fluid {
+  padding-top: 100px;
+}
+
+.guess-zone {
+  margin: 0 auto;
+  width: 1000px;
+}
+.one-guess {
+  width: 100%;
+  height: 100%;
+}
+
+.btn-go {
+  background-color: #57a4bb;
+}
+
+.btn {
+  padding: 5px 8px;
+}
+
+.guess-table {
+  margin: 0 auto;
+  border-spacing: 8px;
+  border-collapse: separate;
+  font-size: 32px;
+  color: #4a4a4a;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+.sym-col {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #d5d5d5;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+  -webkit-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+}
+
+.sym-col span {
+  display: none;
+}
+
+[class^="test-table"] {
+  border-spacing: 3px;
+  border-collapse: separate;
+  min-width: 60px;
+}
+
+.test-col {
+  border: 1px solid #d1d1d1;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: #fff;
+  opacity: 0.7;
+  box-shadow: inset 0px 0px 2px 0px #444;
+  -webkit-box-shadow: inset 0px 0px 2px 0px #444;
+  -moz-box-shadow: inset 0px 0px 2px 0px #444;
+  -o-box-shadow: inset 0px 0px 2px 0px #444;
+}
+
+.test-col:hover {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.loader-col {
+  width: 50px;
+  text-align: center;
+}
+
+[id^="loader"] {
+  display: none;
+}
+
+.red-peg {
+  background-color: #bf2d2d;
+  border: none;
+  opacity: 1;
+}
+
+.yellow-peg {
+  background-color: #f5db4e;
+  border: none;
+  opacity: 1;
+}
+
+[class^="go-btn"] {
+  display: none;
+}
+
+.header {
+  padding: 7px;
+  /*background: #222;
+  color: #f9cb2c;*/
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 3px solid #888;
+}
+
+.sym-bg {
+  display: none;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  min-width: 50px;
+  min-height: 50px;
+}
+
+.sym-A {
+  background-image: url("../images/symA.png");
+}
+.sym-B {
+  background-image: url("../images/symB.png");
+}
+.sym-C {
+  background-image: url("../images/symC.png");
+}
+.sym-D {
+  background-image: url("../images/symD.png");
+}
+.sym-E {
+  background-image: url("../images/symE.png");
+}
+.sym-F {
+  background-image: url("../images/symF.png");
+}
+
+.options-table {
+  margin: 0 auto;
+  border-spacing: 1px;
+  border-collapse: separate;
+}
+
+[class^="option-col"] {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: #f7f7f7;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+[class^="option-col"]:hover {
+  background-color: #fffbc1;
+  transition: background-color 0.5s ease;
+}
+
+[class^="option-col"]:active {
+  -webkit-box-shadow: inset 2px 2px 3px 0px rgba(0, 0, 0, 0.26);
+  -moz-box-shadow: inset 2px 2px 3px 0px rgba(0, 0, 0, 0.26);
+  box-shadow: inset 2px 2px 3px 0px rgba(0, 0, 0, 0.26);
+}
+
+.game-control-section {
+  margin: 0 auto;
+  width: 400px;
+}
+.game-control-section > label {
+  margin: 0 auto;
+}
+
+.game-control-section span {
+  margin-left: 1px;
+  font-size: 16px;
+}
+
+.game-control-section .new-game {
+  margin-top: -5px;
+  margin-left: 5px;
+}
+
+.secret-sym {
+  background-image: url("../images/secret.png");
+}
+
+[class*="secret-block"] {
+  background-color: #9cc4b7;
+  box-shadow: none;
+  border: 1px solid #888;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+  z-index: 999;
+}
