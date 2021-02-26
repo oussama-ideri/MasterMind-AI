@@ -2,6 +2,28 @@ $(document).ready(function () {
   //initGame();
 });
 
+NUM_SYMBOLS = 6;
+
+SYMBOLS = ["A", "B", "C", "D", "E", "F"];
+
+var playerCode, solution;
+var previousGuesses, secretLenght;
+
+function initGame() {
+  secretLenght = $("#lenght-selected").val();
+  if (secretLenght == 4) playerCode = [0, 0, 0, 0];
+  if (secretLenght == 5) playerCode = [0, 0, 0, 0, 0];
+  if (secretLenght == 6) playerCode = [0, 0, 0, 0, 0, 0];
+  solution = [];
+  for (var i = 0; i < secretLenght; i++) {
+    solution[i] = SYMBOLS[Math.floor(Math.random() * NUM_SYMBOLS)];
+  }
+  console.log(solution);
+
+  previousGuesses = [];
+  buildTable();
+}
+
 initGame();
 
 function buildTable6() {
@@ -31,13 +53,16 @@ function buildTable6() {
                         </table>
                     </td>
                     <td class="loader-col">
-                        <div class="btn btn-go go-btn-${i} disabled"> Vérifier</div>
+                        <div class="btn btn-go go-btn-${i}"> Vérifier</div>
                         <img id="loader-${i}" src="images/loader.gif">
                     </td>
                 </tr>`;
     $(".guess-table").append(table);
+    if (i != 0) {
+      $(`.go-btn-${i}`).attr("disabled", true);
+    }
   }
-  $(".go-btn-5").css("display", "none");
+  //$(".go-btn-5").css("display", "none");
 
   var footer = `<tfoot id="footer">
   <tr class="secret-row">
@@ -52,7 +77,6 @@ function buildTable6() {
 </tfoot>`;
   $(".guess-table").append(footer);
 }
-
 function buildTable5() {
   $(".guess-table").children().remove();
   for (i = 0; i < 6; i++) {
@@ -77,14 +101,17 @@ function buildTable5() {
                         </table>
                     </td>
                     <td class="loader-col">
-                        <div class="btn btn-go go-btn-${i} disabled"> Vérifier</div>
+                        <div class="btn btn-go go-btn-${i}"> Vérifier</div>
                         <img id="loader-${i}" src="images/loader.gif">
                     </td>
                 </tr>`;
 
     $(".guess-table").append(table);
+    if (i != 0) {
+      $(`.go-btn-${i}`).attr("disabled", true);
+    }
   }
-  $(".go-btn-5").css("display", "none");
+  //$(".go-btn-5").css("display", "none");
 
   var footer = `<tfoot id="footer">
   <tr class="secret-row">
@@ -97,7 +124,6 @@ function buildTable5() {
 </tfoot>`;
   $(".guess-table").append(footer);
 }
-
 function buildTable4() {
   $(".guess-table").children().remove();
   for (i = 0; i < 6; i++) {
@@ -120,14 +146,18 @@ function buildTable4() {
                           </table>
                       </td>
                       <td class="loader-col">
-                          <div class="btn btn-go go-btn-${i} disabled"> Vérifier</div>
+                          <div class="btn btn-go go-btn-${i}"> Vérifier</div>
                           <img id="loader-${i}" src="images/loader.gif">
                       </td>
                   </tr>`;
 
     $(".guess-table").append(table);
+    if (i != 0) {
+      $(`.go-btn-${i}`).attr("disabled", true);
+    }
   }
-  $(".go-btn-5").css("display", "none");
+  //$(".go-btn-5").css("display", "none");
+
   var footer = `<tfoot id="footer">
     <tr class="secret-row">
         <td class="sym-col secret-block-0 secret-sym"></td>
@@ -138,11 +168,12 @@ function buildTable4() {
   </tfoot>`;
   $(".guess-table").append(footer);
 }
-
 function buildTable() {
   if (secretLenght == 6) buildTable6();
   if (secretLenght == 5) buildTable5();
-  if (secretLenght == 4) buildTable4();
+  if (secretLenght == 4) {
+    buildTable4();
+  }
 }
 
 function diplayGuess(code) {
@@ -157,17 +188,17 @@ function diplayGuess(code) {
       .fadeIn(280);
     if (++i < code.length) {
       setTimeout(function () {
-        fn(callback);
+        //fn(callback);
       }, 280);
     } else {
       callback();
     }
   };
-  fn(function () {
+  /*fn(function () {
     if (gameMode == GAME_MODE_3) {
-      showPegs(code);
+      showColors(code);
     }
-  });
+  })*/
 }
 
 function getNumberFromClass(classAttr, prefix) {
@@ -177,31 +208,6 @@ function getNumberFromClass(classAttr, prefix) {
   }
   return NaN;
 }
-
-var playerCode;
-var previousGuesses, secretLenght;
-
-function initGame() {
-  secretLenght = $("#lenght-selected").val();
-  if (secretLenght == 4) playerCode = [0, 0, 0, 0];
-  if (secretLenght == 5) playerCode = [0, 0, 0, 0, 0];
-  if (secretLenght == 6) playerCode = [0, 0, 0, 0, 0, 0];
-
-  previousGuesses = [];
-  buildTable();
-}
-
-/*$("[class*='go-btn']").click(function () {
-  if (playerCode.indexOf(0) == -1) {
-    var over = showPegs(playerCode);
-    $(this).hide();
-    previousGuesses.push(playerCode);
-    playerCode = [0, 0, 0, 0];
-    if (!over) {
-      $(".go-btn-" + previousGuesses.length).removeClass("disabled");
-    }
-  }
-});*/
 
 $("[class^='option-col']").click(function () {
   var symbolClass = $(this).attr("class").split(" ")[1]; //  symbolClass= "sym-A" ou "sym-B" ....
@@ -218,15 +224,73 @@ $("[class^='option-col']").click(function () {
   }
 });
 
-$(".sym-col").click(function () {
+$(document).on("click", ".sym-col", function (e) {
   var blockNumber = getNumberFromClass($(this).attr("class"), "block-"); // blockNumber est le nbr i dans l'exemple suivant : class="sym-col block-i"
   playerCode[blockNumber] = 0; // reinitialiser le attribue playerCode[i] en 0
   $(this).attr("class", "sym-col block-" + blockNumber); // No need
 });
 
-function removeSym() {
-  var blockNumber = getNumberFromClass(".sym-col", "block-"); // blockNumber est le nbr i dans l'exemple suivant : class="sym-col block-i"
-  playerCode[blockNumber] = 0; // reinitialiser le attribue playerCode[i] en 0
-  $(this).attr("class", "sym-col block-" + blockNumber); // No need
-  console.log(blockNumber);
+$(document).on("click", "[class*='go-btn']", function () {
+  if (playerCode.indexOf(0) == -1) {
+    var over = showColors(playerCode);
+    $(this).hide();
+    previousGuesses.push(playerCode);
+    playerCode = [0, 0, 0, 0];
+    if (!over) {
+      //$(".go-btn-" + previousGuesses.length).removeClass("disabled");
+      $(`.go-btn-` + previousGuesses.length).attr("disabled", false);
+
+      console.log(previousGuesses.length);
+    }
+  }
+});
+
+function showColors(code) {
+  var testResponse = testCombination(code);
+
+  var testTableSelector = $(".test-table-" + previousGuesses.length);
+  var td = 0;
+  for (; td < testResponse[0]; td++) {
+    testTableSelector.find("#tcol-" + td).addClass("red-peg");
+  }
+  for (; td < testResponse[0] + testResponse[1]; td++) {
+    testTableSelector.find("#tcol-" + td).addClass("yellow-peg");
+  }
+  if (
+    testResponse[0] == secretLenght ||
+    previousGuesses.length == 6 ||
+    previousGuesses.length == 5
+  ) {
+    $("[class*='go-btn']").addClass("disabled");
+    displayGameSolution();
+    return true;
+  }
+  return false;
 }
+function testCombination(combination) {
+  return testCode(combination, solution);
+}
+
+var testCode = function (combination, solution) {
+  var a = 0;
+  var b = 0;
+  var marked = [0, 0, 0, 0];
+  for (var i = 0; i < secretLenght; i++) {
+    if (combination[i] == solution[i]) {
+      a++;
+      marked[i] = 1;
+    }
+  }
+  for (var i = 0; i < secretLenght; i++) {
+    if (combination[i] != solution[i]) {
+      for (var j = 0; j < secretLenght; j++) {
+        if (i != j && 0 == marked[j] && combination[i] == solution[j]) {
+          b++;
+          marked[j] = 1;
+          break;
+        }
+      }
+    }
+  }
+  return [a, b];
+};
