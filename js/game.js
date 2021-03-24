@@ -1,4 +1,4 @@
-NUM_SYMBOLS = 6;
+/*NUM_SYMBOLS = 6;
 NUM_FIELDS = 4;
 
 SYMBOLS = ["A", "B", "C", "D", "E", "F"];
@@ -298,3 +298,4 @@ $(".sym-col").click(function () {
     $(this).attr("class", "sym-col block-" + blockNumber);
   }
 });
+*/

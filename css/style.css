@@ -168,6 +168,7 @@ body {
 .game-control-section {
   margin: 0 auto;
   width: 400px;
+  margin-top: 10px;
 }
 .game-control-section > label {
   margin: 0 auto;
@@ -180,7 +181,7 @@ body {
 
 .game-control-section .new-game {
   margin-top: -5px;
-  margin-left: 5px;
+  /*margin-left: 5px;*/
 }
 
 .secret-sym {
