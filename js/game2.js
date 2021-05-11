@@ -9,6 +9,7 @@ SYMBOLS = ["A", "B", "C", "D", "E", "F"];
 var playerCode, solution;
 var previousGuesses, secretLenght;
 
+// Initialiser la partie, créer la table du jeu et générer le mot secret
 function initGame() {
   secretLenght = $("#lenght-selected").val();
   if (secretLenght == 4) playerCode = [0, 0, 0, 0];
@@ -176,6 +177,7 @@ function buildTable() {
   }
 }
 
+// Pour afficher le symbole choisie par l'utilisateur sur la table
 function diplayGuess(code) {
   var rowSelector = $(".guess-row-" + previousGuesses.length);
   var i = 0;
@@ -201,14 +203,6 @@ function diplayGuess(code) {
   })*/
 }
 
-function getNumberFromClass(classAttr, prefix) {
-  var startIndex = classAttr.indexOf(prefix);
-  if (startIndex != -1) {
-    return parseInt(classAttr.charAt(startIndex + prefix.length));
-  }
-  return NaN;
-}
-
 $("[class^='option-col']").click(function () {
   var symbolClass = $(this).attr("class").split(" ")[1]; //  symbolClass= "sym-A" ou "sym-B" ....
   var firstPosition = playerCode.indexOf(0);
@@ -224,12 +218,21 @@ $("[class^='option-col']").click(function () {
   }
 });
 
+function getNumberFromClass(classAttr, prefix) {
+  var startIndex = classAttr.indexOf(prefix);
+  if (startIndex != -1) {
+    return parseInt(classAttr.charAt(startIndex + prefix.length));
+  }
+  return NaN;
+}
+
 $(document).on("click", ".sym-col", function (e) {
   var blockNumber = getNumberFromClass($(this).attr("class"), "block-"); // blockNumber est le nbr i dans l'exemple suivant : class="sym-col block-i"
   playerCode[blockNumber] = 0; // reinitialiser le attribue playerCode[i] en 0
-  $(this).attr("class", "sym-col block-" + blockNumber); // No need
+  $(this).attr("class", "sym-col block-" + blockNumber);
 });
 
+// L'action du bouton "Vérifier": sauvgarder le code secret saisie par l'utilisateur et faire appele a la fct showColors pour afficher les couleur
 $(document).on("click", "[class*='go-btn']", function () {
   if (playerCode.indexOf(0) == -1) {
     var over = showColors(playerCode);
@@ -245,6 +248,7 @@ $(document).on("click", "[class*='go-btn']", function () {
   }
 });
 
+// Afficher les couleurs(rouge, jaune) et desactiver le bouton verifier du même ligne
 function showColors(code) {
   var testResponse = testCombination(code);
 
@@ -262,11 +266,13 @@ function showColors(code) {
     previousGuesses.length == 5
   ) {
     $("[class*='go-btn']").addClass("disabled");
-    displayGameSolution();
+    //displayGameSolution();
     return true;
   }
   return false;
 }
+
+// Tester la combinaison saisie par l'utilisateur
 function testCombination(combination) {
   return testCode(combination, solution);
 }
