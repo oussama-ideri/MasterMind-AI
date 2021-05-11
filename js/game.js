@@ -1,4 +1,4 @@
-/*NUM_SYMBOLS = 6;
+NUM_SYMBOLS = 6;
 NUM_FIELDS = 4;
 
 SYMBOLS = ["A", "B", "C", "D", "E", "F"];
@@ -79,6 +79,7 @@ function showPegs(code) {
   return false;
 }
 
+// Pour afficher le symbole choisie par l'utilisateur sur la table
 function diplayGuess(code) {
   var rowSelector = $(".guess-row-" + previousGuesses.length);
   var i = 0;
@@ -130,11 +131,15 @@ function Mastermind() {
   this.solution = [];
   this.newGame();
 }
+
+// Generer un code secret pour commencer le jeu
 Mastermind.prototype.newGame = function () {
   for (var i = 0; i < NUM_FIELDS; i++) {
     this.solution[i] = SYMBOLS[Math.floor(Math.random() * NUM_SYMBOLS)];
   }
 };
+
+// Tester la combinaison en question
 Mastermind.prototype.testCombination = function (combination) {
   return testCode(combination, this.solution);
 };
@@ -172,8 +177,10 @@ function getNumberFromClass(classAttr, prefix) {
 }
 
 function cleanUpPlayground() {
+  // Disable all verification(GO) buttons
   $("[class*='go-btn']").addClass("disabled").show();
   $(".go-btn-0").removeClass("disabled");
+  // [class*='secret-block'] is the footer (solution line)
   $(".sym-col").each(function () {
     if (!$(this).is("[class*='secret-block']")) {
       var prefix = "block-";
@@ -186,20 +193,40 @@ function cleanUpPlayground() {
   clearSolutionBoxes();
 }
 
+function clearSolutionBoxes() {
+  $("[class*='secret-block']").each(function () {
+    var newClass =
+      $(this).attr("class").split(" ").slice(0, 2).join(" ") + " secret-sym";
+    $(this).attr("class", newClass);
+  });
+}
+
+function displayGameSolution() {
+  for (var i in game.solution) {
+    var fieldSelect = $(".secret-block-" + i);
+    fieldSelect.removeClass("secret-sym").addClass("sym-" + game.solution[i]);
+  }
+}
+
 $(".new-game").click(function () {
   startNewGame();
 });
 
-function playNextGuess(blackNum, whiteNum) {
-  console.log(blackNum, whiteNum);
-  previousGuesses.push({ code: aiGuess, x: blackNum, y: whiteNum });
-  if (blackNum == NUM_FIELDS) {
+/* - Save last guess
+   - check that guess is the solution
+   - if we still can made another guess the fct call chooseNextGuess()
+*/
+function playNextGuess(redNum, yellowNum) {
+  console.log(redNum, yellowNum);
+  previousGuesses.push({ code: aiGuess, x: redNum, y: yellowNum });
+  if (redNum == NUM_FIELDS) {
     alert("Win!");
     return;
   }
   eligibleSet = [];
   var genNum = 0;
   population.generation(previousGuesses, eligibleSet, MAXGEN, function () {
+    // eligibleSet is the nbr of tries that u can make
     if (eligibleSet.length > 0) {
       aiGuess = chooseNextGuess(eligibleSet);
       diplayGuess(aiGuess);
@@ -212,19 +239,7 @@ function playNextGuess(blackNum, whiteNum) {
   });
 }
 
-$(".test-col").click(function () {
-  if (gameMode == GAME_MODE_2) {
-    if ($(this).hasClass("red-peg")) {
-      $(this).removeClass("red-peg");
-    } else if ($(this).hasClass("yellow-peg")) {
-      $(this).removeClass("yellow-peg");
-      $(this).addClass("red-peg");
-    } else {
-      $(this).addClass("yellow-peg");
-    }
-  }
-});
-
+// Return nbr of red-peg and yellow-peg
 function countTestResponse() {
   var red = 0,
     yellow = 0;
@@ -238,21 +253,6 @@ function countTestResponse() {
     }
   });
   return { a: red, b: yellow };
-}
-
-function displayGameSolution() {
-  for (var i in game.solution) {
-    var fieldSelect = $(".secret-block-" + i);
-    fieldSelect.removeClass("secret-sym").addClass("sym-" + game.solution[i]);
-  }
-}
-
-function clearSolutionBoxes() {
-  $("[class*='secret-block']").each(function () {
-    var newClass =
-      $(this).attr("class").split(" ").slice(0, 2).join(" ") + " secret-sym";
-    $(this).attr("class", newClass);
-  });
 }
 
 $("[class*='go-btn']").click(function () {
@@ -274,6 +274,7 @@ $("[class*='go-btn']").click(function () {
   }
 });
 
+// For GAME_MODE_1
 $("[class^='option-col']").click(function () {
   if (gameMode == GAME_MODE_1) {
     var symbolClass = $(this).attr("class").split(" ")[1];
@@ -291,6 +292,7 @@ $("[class^='option-col']").click(function () {
   }
 });
 
+// For GAME_MODE_1
 $(".sym-col").click(function () {
   if (gameMode == GAME_MODE_1) {
     var blockNumber = getNumberFromClass($(this).attr("class"), "block-");
@@ -298,4 +300,19 @@ $(".sym-col").click(function () {
     $(this).attr("class", "sym-col block-" + blockNumber);
   }
 });
+
+/* For AI vs Human 
+   It shows red/yellow on test-col
+  $(".test-col").click(function () {
+    if (gameMode == GAME_MODE_2) {
+      if ($(this).hasClass("red-peg")) {
+        $(this).removeClass("red-peg");
+      } else if ($(this).hasClass("yellow-peg")) {
+        $(this).removeClass("yellow-peg");
+        $(this).addClass("red-peg");
+      } else {
+        $(this).addClass("yellow-peg");
+      }
+    }
+  });
 */
