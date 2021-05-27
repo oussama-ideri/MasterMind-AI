@@ -1,14 +1,11 @@
-$(document).ready(function () {
-  //initGame();
-});
+GAME_MODE_HUMAN = 1;
+GAME_MODE_AI = 2;
 
 NUM_SYMBOLS = 6;
-NUM_FIELDS = 4;
-
 SYMBOLS = ["A", "B", "C", "D", "E", "F"];
 
-MUTATION_PROBABILITY = 0.2; // 0.6
-PERMUTATION_PROBABILITY = 0.1; // 0.4
+MUTATION_PROBABILITY = 0.2;
+PERMUTATION_PROBABILITY = 0.1;
 INVERSION_PROBABILITY = 0.05;
 
 MAXGEN = 250;
@@ -17,10 +14,9 @@ SET_SIZE = 110;
 FIT_A = 1;
 FIT_B = 2;
 
+var secretLenght;
 var allCodes = [];
-variations(SYMBOLS, NUM_FIELDS, [], allCodes);
 
-//
 function shouldDo(probability) {
   if (Math.random() <= probability) {
     return true;
@@ -28,13 +24,11 @@ function shouldDo(probability) {
   return false;
 }
 
-//
 function getCrossoverPoint(length) {
   // Math.floor(x) renvoie le plus grand entier qui est inférieur ou égal à un nombre x
   return Math.floor(Math.random() * (length - 2) + 1);
 }
 
-// Renvoie le nbr de fois
 function check(probability, toRepeat) {
   // toRepeat est le nbr de repetition
   var total = toRepeat;
@@ -66,13 +60,13 @@ Combination.prototype.crossover = function (other) {
 };
 
 Combination.prototype.mutate = function () {
-  var position = Math.floor(Math.random() * NUM_FIELDS);
+  var position = Math.floor(Math.random() * secretLenght);
   var newValue = _.sample(_.without(SYMBOLS, this.code[position]));
   this.code[position] = newValue;
 };
 
 Combination.prototype.permutate = function () {
-  var positions = _.range(NUM_FIELDS);
+  var positions = _.range(secretLenght);
   var toPermute = _.sample(positions, 2);
   this.code[toPermute[1]] = [
     this.code[toPermute[0]],
@@ -103,7 +97,7 @@ Combination.prototype.calculateFitness = function (prevGuesses) {
     this.eligible = true;
   }
   this.fitness =
-    FIT_A * xDifference + yDifference + FIT_B * NUM_FIELDS * slickValue;
+    FIT_A * xDifference + yDifference + FIT_B * secretLenght * slickValue;
 };
 
 function variations(symbols, depth, variation, results) {
@@ -111,8 +105,7 @@ function variations(symbols, depth, variation, results) {
   //
   if (depth > 0) {
     for (var i = 0; i < symbols.length; i++) {
-      // newBranch va étre un tableau vide -> []
-      var newBranch = variation.slice();
+      var newBranch = variation.slice(); // newBranch va étre un tableau vide -> []
       newBranch.push(symbols[i]);
       variations(symbols, depth - 1, newBranch, results);
     }
@@ -128,7 +121,7 @@ function Mastermind() {
 
 // Generer aléatoirement la solution de notre probléme
 Mastermind.prototype.newGame = function () {
-  for (var i = 0; i < NUM_FIELDS; i++) {
+  for (var i = 0; i < secretLenght; i++) {
     this.solution[i] = SYMBOLS[Math.floor(Math.random() * NUM_SYMBOLS)];
   }
 };
@@ -142,16 +135,19 @@ Mastermind.prototype.testCombination = function (combination) {
 var testCode = function (combination, solution) {
   var a = 0;
   var b = 0;
-  var marked = [0, 0, 0, 0];
-  for (var i = 0; i < NUM_FIELDS; i++) {
+  var marked;
+  if (secretLenght == 4) marked = [0, 0, 0, 0];
+  if (secretLenght == 5) marked = [0, 0, 0, 0, 0];
+  if (secretLenght == 6) marked = [0, 0, 0, 0, 0, 0];
+  for (var i = 0; i < secretLenght; i++) {
     if (combination[i] == solution[i]) {
       a++;
       marked[i] = 1;
     }
   }
-  for (var i = 0; i < NUM_FIELDS; i++) {
+  for (var i = 0; i < secretLenght; i++) {
     if (combination[i] != solution[i]) {
-      for (var j = 0; j < NUM_FIELDS; j++) {
+      for (var j = 0; j < secretLenght; j++) {
         if (i != j && 0 == marked[j] && combination[i] == solution[j]) {
           b++;
           marked[j] = 1;
@@ -244,58 +240,44 @@ Population.prototype.generation = function (
 
 /***********************************************************************************************************************************************/
 
-GAME_MODE_1 = 1;
-GAME_MODE_3 = 3;
+var gameMode, playerCode, solution, previousGuesses;
+var game, aiGuess, population, eligibleSet, playerCode;
 
-SYMBOLS = ["A", "B", "C", "D", "E", "F"];
-var gameMode;
-
-var playerCode, solution;
-var previousGuesses, secretLenght;
-
-var game, aiGuess, population, eligibleSet;
-var gameMode, previousGuesses, playerCode;
+buildTable4();
 
 // Initialiser la partie, créer la table du jeu et générer le mot secret
 function initGame() {
   secretLenght = $("#lenght-selected").val();
   gameMode = $("#mode-selected").val();
-  //gameMode = GAME_MODE_3;
   buildTable();
+  variations(SYMBOLS, secretLenght, [], allCodes);
 
   initGameVariables();
   cleanUpPlayground();
-  if (gameMode != GAME_MODE_1) {
+  if (gameMode != GAME_MODE_HUMAN) {
     console.log(aiGuess);
-    console.log(allCodes);
-
+    //console.log(allCodes);
     diplayGuess(aiGuess);
     $(".go-btn-5").hide();
   } else {
     $(".go-btn-5").show();
   }
-  /*if (secretLenght == 4) playerCode = [0, 0, 0, 0];
-  if (secretLenght == 5) playerCode = [0, 0, 0, 0, 0];
-  if (secretLenght == 6) playerCode = [0, 0, 0, 0, 0, 0];*/
-  /*solution = [];
-  for (var i = 0; i < secretLenght; i++) {
-    solution[i] = SYMBOLS[Math.floor(Math.random() * NUM_SYMBOLS)];
-  }
-  console.log(solution);
-
-  previousGuesses = [];*/
 }
 
-initGame();
 function initGameVariables() {
   game = new Mastermind();
   aiGuess = _.sample(allCodes);
   population = new Population(POPULATION_SIZE);
   eligibleSet = [];
-  //gameMode = parseInt($("#mode-select").val());
-  playerCode = [0, 0, 0, 0];
+  initPlayerCode();
   previousGuesses = [];
   console.log(game.solution);
+}
+
+function initPlayerCode() {
+  if (secretLenght == 4) playerCode = [0, 0, 0, 0];
+  if (secretLenght == 5) playerCode = [0, 0, 0, 0, 0];
+  if (secretLenght == 6) playerCode = [0, 0, 0, 0, 0, 0];
 }
 
 function cleanUpPlayground() {
@@ -324,8 +306,8 @@ function clearSolutionBoxes() {
 function playNextGuess(blackNum, whiteNum) {
   console.log(blackNum, whiteNum);
   previousGuesses.push({ code: aiGuess, x: blackNum, y: whiteNum });
-  if (blackNum == NUM_FIELDS) {
-    alert("Win!");
+  if (blackNum == secretLenght) {
+    //alert("Win!");
     return;
   }
   eligibleSet = [];
@@ -523,33 +505,11 @@ function chooseNextGuess(eligible) {
   return nextGuess.split("");
 }
 
-function showPegs(code) {
-  var testResponse = game.testCombination(code);
-  var testTableSelector = $(".test-table-" + previousGuesses.length);
-  var td = 0;
-  for (; td < testResponse[0]; td++) {
-    testTableSelector.find("#tcol-" + td).addClass("red-peg");
-  }
-  for (; td < testResponse[0] + testResponse[1]; td++) {
-    testTableSelector.find("#tcol-" + td).addClass("yellow-peg");
-  }
-  if (
-    testResponse[0] == NUM_FIELDS ||
-    previousGuesses.length == 6 ||
-    (gameMode == GAME_MODE_1 && previousGuesses.length == 5)
-  ) {
-    $("[class*='go-btn']").addClass("disabled");
-    displayGameSolution();
-    return true;
-  }
-  return false;
-}
-
 // Pour afficher le symbole choisie par l'utilisateur sur la table
 function diplayGuess(code) {
   var rowSelector = $(".guess-row-" + previousGuesses.length);
   console.log(previousGuesses.length);
-  console.log(code);
+  console.log(previousGuesses);
   var i = 0;
   var fn = function (callback) {
     rowSelector
@@ -567,9 +527,9 @@ function diplayGuess(code) {
     }
   };
   fn(function () {
-    if (gameMode == 3) {
+    if (gameMode == GAME_MODE_AI) {
       console.log(code);
-      showPegs(code);
+      showColors(code);
     }
   });
 }
@@ -583,7 +543,7 @@ $("[class^='option-col']").click(function () {
       .addClass("sym-bg")
       .hide()
       .addClass(symbolClass)
-      .fadeIn();
+      .fadeIn(200);
     var symbolValue = symbolClass.substr(4, 1); // symbolValue = A ou B ou C ..
     playerCode[firstPosition] = symbolValue; //
   }
@@ -599,25 +559,13 @@ function getNumberFromClass(classAttr, prefix) {
 
 $(document).on("click", ".sym-col", function (e) {
   var blockNumber = getNumberFromClass($(this).attr("class"), "block-"); // blockNumber est le nbr i dans l'exemple suivant : class="sym-col block-i"
-  playerCode[blockNumber] = 0; // reinitialiser le attribue playerCode[i] en 0
+  playerCode[blockNumber] = 0; // reinitialiser l'attribue playerCode[i] en 0
   $(this).attr("class", "sym-col block-" + blockNumber);
 });
 
 // L'action du bouton "Vérifier": sauvgarder le code secret saisie par l'utilisateur et faire appele a la fct showColors pour afficher les couleur
 $(document).on("click", "[class*='go-btn']", function () {
-  /*if (playerCode.indexOf(0) == -1) {
-    var over = showColors(playerCode);
-    $(this).hide();
-    previousGuesses.push(playerCode);
-    playerCode = [0, 0, 0, 0];
-    if (!over) {
-      //$(".go-btn-" + previousGuesses.length).removeClass("disabled");
-      $(`.go-btn-` + previousGuesses.length).attr("disabled", false);
-
-      console.log(previousGuesses.length);
-    }
-  }*/
-  if (gameMode != GAME_MODE_1) {
+  if (gameMode != GAME_MODE_HUMAN) {
     var response = countTestResponse();
     $(this).hide();
     $("#loader-" + previousGuesses.length).show();
@@ -626,10 +574,10 @@ $(document).on("click", "[class*='go-btn']", function () {
     $(`.go-btn-` + previousGuesses.length).attr("disabled", false);
   } else {
     if (playerCode.indexOf(0) == -1) {
-      var over = showPegs(playerCode);
+      var over = showColors(playerCode);
       $(this).hide();
       previousGuesses.push(playerCode);
-      playerCode = [0, 0, 0, 0];
+      initPlayerCode();
       if (!over) {
         $(".go-btn-" + previousGuesses.length).removeClass("disabled");
         $(`.go-btn-` + previousGuesses.length).attr("disabled", false);
@@ -640,8 +588,7 @@ $(document).on("click", "[class*='go-btn']", function () {
 
 // Afficher les couleurs(rouge, jaune) et desactiver le bouton verifier du même ligne
 function showColors(code) {
-  var testResponse = testCombination(code);
-
+  var testResponse = game.testCombination(code);
   var testTableSelector = $(".test-table-" + previousGuesses.length);
   var td = 0;
   for (; td < testResponse[0]; td++) {
@@ -650,10 +597,11 @@ function showColors(code) {
   for (; td < testResponse[0] + testResponse[1]; td++) {
     testTableSelector.find("#tcol-" + td).addClass("yellow-peg");
   }
+  // testResponse[0] egale au nbr des symboles bien placer dans la case correspondant
   if (
     testResponse[0] == secretLenght ||
     previousGuesses.length == 6 ||
-    previousGuesses.length == 5
+    (gameMode == GAME_MODE_HUMAN && previousGuesses.length == 5)
   ) {
     $("[class*='go-btn']").addClass("disabled");
     displayGameSolution();
@@ -667,65 +615,12 @@ function testCombination(combination) {
   return testCode(combination, solution);
 }
 
-var testCode = function (combination, solution) {
-  var a = 0;
-  var b = 0;
-  var marked = [0, 0, 0, 0];
-  for (var i = 0; i < secretLenght; i++) {
-    if (combination[i] == solution[i]) {
-      a++;
-      marked[i] = 1;
-    }
-  }
-  for (var i = 0; i < secretLenght; i++) {
-    if (combination[i] != solution[i]) {
-      for (var j = 0; j < secretLenght; j++) {
-        if (i != j && 0 == marked[j] && combination[i] == solution[j]) {
-          b++;
-          marked[j] = 1;
-          break;
-        }
-      }
-    }
-  }
-  return [a, b];
-};
-
-function displayGameSolution() {
-  for (var i in solution) {
-    var fieldSelect = $(".secret-block-" + i);
-    fieldSelect.removeClass("secret-sym").addClass("sym-" + solution[i]);
-  }
-}
-
 function getNumberFromClass(classAttr, prefix) {
   var startIndex = classAttr.indexOf(prefix);
   if (startIndex != -1) {
     return parseInt(classAttr.charAt(startIndex + prefix.length));
   }
   return NaN;
-}
-
-function playNextGuess(blackNum, whiteNum) {
-  console.log(blackNum, whiteNum);
-  previousGuesses.push({ code: aiGuess, x: blackNum, y: whiteNum });
-  if (blackNum == NUM_FIELDS) {
-    alert("Win!");
-    return;
-  }
-  eligibleSet = [];
-  var genNum = 0;
-  population.generation(previousGuesses, eligibleSet, MAXGEN, function () {
-    if (eligibleSet.length > 0) {
-      aiGuess = chooseNextGuess(eligibleSet);
-      diplayGuess(aiGuess);
-      $("#loader-" + (previousGuesses.length - 1)).hide();
-      $(".go-btn-" + previousGuesses.length).removeClass("disabled");
-    } else {
-      alert("Lose!");
-    }
-    $("#loader").hide();
-  });
 }
 
 function countTestResponse() {

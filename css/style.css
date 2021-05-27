@@ -85,13 +85,13 @@ body {
 }
 
 .red-peg {
-  background-color: #bf2d2d;
+  background-color: #d94558;
   border: none;
   opacity: 1;
 }
 
 .yellow-peg {
-  background-color: #f5db4e;
+  background-color: #fffaa2;
   border: none;
   opacity: 1;
 }
@@ -118,27 +118,21 @@ body {
 }
 
 .sym-A {
-  /*background-image: url("../images/symA.png");*/
   background-color: #b7b7a4 !important;
 }
 .sym-B {
-  /*background-image: url("../images/symB.png");*/
   background-color: #a8dadc !important ;
 }
 .sym-C {
-  /*background-image: url("../images/symC.png");*/
   background-color: #457b9d !important ;
 }
 .sym-D {
-  /*background-image: url("../images/symD.png");*/
   background-color: #e9c46a !important ;
 }
 .sym-E {
-  /*background-image: url("../images/symE.png");*/
   background-color: #e76f51 !important ;
 }
 .sym-F {
-  /*background-image: url("../images/symF.png");*/
   background-color: #e63946 !important ;
 }
 
