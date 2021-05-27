@@ -291,7 +291,6 @@ function clearSolutionBoxes() {
 }
 
 function playNextGuess(blackNum, whiteNum) {
-  console.log(blackNum, whiteNum);
   previousGuesses.push({ code: aiGuess, x: blackNum, y: whiteNum });
   if (blackNum == secretLenght) {
     alert("Win!");
