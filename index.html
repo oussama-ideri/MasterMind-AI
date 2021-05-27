@@ -17,7 +17,7 @@
 	<div class="top_navbar">
 		<div class="top_menu">
 		  <div class="logo">
-			Mastermind Game
+			Jeu MasterMind
 		  </div>
 		</div>
 	  </div>  
@@ -41,13 +41,21 @@
 					</table>
 					<div class="game-control-section">	
 						<label class="">
-							<span>Choisissez la longueur du mot secret</span>
+							<span>Mode du jeu</span>
+							<select id="mode-selected" class="form-control">
+								<option value="1">Humain vs ordinateur</option>
+								<option value="3">AI vs ordinateur</option>
+							</select>
+						</label>
+						<label class="">
+							<span>Longueur du mot secret</span>
 							<select id="lenght-selected" class="form-control">
 								<option value="4">4</option>
 								<option value="5">5</option>
 								<option value="6">6</option>
 							</select>
 						</label>
+						
 						<div class="btn btn-primary new-game center" onclick="initGame()">Nouvelle partie</div>	
 					</div>					
 				</p>

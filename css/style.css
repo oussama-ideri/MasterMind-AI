@@ -118,22 +118,28 @@ body {
 }
 
 .sym-A {
-  background-image: url("../images/symA.png");
+  /*background-image: url("../images/symA.png");*/
+  background-color: #b7b7a4 !important;
 }
 .sym-B {
-  background-image: url("../images/symB.png");
+  /*background-image: url("../images/symB.png");*/
+  background-color: #a8dadc !important ;
 }
 .sym-C {
-  background-image: url("../images/symC.png");
+  /*background-image: url("../images/symC.png");*/
+  background-color: #457b9d !important ;
 }
 .sym-D {
-  background-image: url("../images/symD.png");
+  /*background-image: url("../images/symD.png");*/
+  background-color: #e9c46a !important ;
 }
 .sym-E {
-  background-image: url("../images/symE.png");
+  /*background-image: url("../images/symE.png");*/
+  background-color: #e76f51 !important ;
 }
 .sym-F {
-  background-image: url("../images/symF.png");
+  /*background-image: url("../images/symF.png");*/
+  background-color: #e63946 !important ;
 }
 
 .options-table {
@@ -166,9 +172,10 @@ body {
 }
 
 .game-control-section {
+  width: 100%;
   margin: 0 auto;
-  width: 400px;
   margin-top: 10px;
+  text-align: center;
 }
 .game-control-section > label {
   margin: 0 auto;
