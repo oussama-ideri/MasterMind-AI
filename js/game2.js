@@ -82,7 +82,6 @@ Combination.prototype.getCodeString = function () {
   return this.code.join("");
 };
 
-// Valuer le Guess precedant qu'on a fait
 Combination.prototype.calculateFitness = function (prevGuesses) {
   var xDifference = 0;
   var yDifference = 0;
@@ -119,19 +118,16 @@ function Mastermind() {
   this.newGame();
 }
 
-// Generer aléatoirement la solution de notre probléme
 Mastermind.prototype.newGame = function () {
   for (var i = 0; i < secretLenght; i++) {
     this.solution[i] = SYMBOLS[Math.floor(Math.random() * NUM_SYMBOLS)];
   }
 };
 
-// Tester la combinaison avec notre la solution de jeu
 Mastermind.prototype.testCombination = function (combination) {
   return testCode(combination, this.solution);
 };
 
-// C'est la fct qui nous permet de tester la combinaison
 var testCode = function (combination, solution) {
   var a = 0;
   var b = 0;
@@ -165,10 +161,6 @@ function Population(size) {
   this.init();
 }
 
-// Une population sagit d'un Guess aléatoire est apres chaque Guess on evalue les individues de cette population, les individues sont les symboles
-// On l'est évalue en se basent sur leur score (red yellow)
-
-//
 Population.prototype.init = function () {
   this.members = [];
   // _.sample(allCodes, this.size) renvoie this.size élements aléatoire du tableau allCodes
@@ -177,14 +169,12 @@ Population.prototype.init = function () {
     this.members.push(new Combination(randomSample[i]));
 };
 
-//
 Population.prototype.sort = function () {
   this.members.sort(function (a, b) {
     return a.fitness - b.fitness;
   });
 };
 
-// Génerer une population
 Population.prototype.generation = function (
   prevGuesses,
   eiSet,
@@ -238,14 +228,11 @@ Population.prototype.generation = function (
   }, 5);
 };
 
-/***********************************************************************************************************************************************/
-
 var gameMode, playerCode, solution, previousGuesses;
 var game, aiGuess, population, eligibleSet, playerCode;
 
 buildTable4();
 
-// Initialiser la partie, créer la table du jeu et générer le mot secret
 function initGame() {
   secretLenght = $("#lenght-selected").val();
   gameMode = $("#mode-selected").val();
@@ -505,7 +492,6 @@ function chooseNextGuess(eligible) {
   return nextGuess.split("");
 }
 
-// Pour afficher le symbole choisie par l'utilisateur sur la table
 function diplayGuess(code) {
   var rowSelector = $(".guess-row-" + previousGuesses.length);
   console.log(previousGuesses.length);
@@ -563,7 +549,6 @@ $(document).on("click", ".sym-col", function (e) {
   $(this).attr("class", "sym-col block-" + blockNumber);
 });
 
-// L'action du bouton "Vérifier": sauvgarder le code secret saisie par l'utilisateur et faire appele a la fct showColors pour afficher les couleur
 $(document).on("click", "[class*='go-btn']", function () {
   if (gameMode != GAME_MODE_HUMAN) {
     var response = countTestResponse();
@@ -586,7 +571,6 @@ $(document).on("click", "[class*='go-btn']", function () {
   }
 });
 
-// Afficher les couleurs(rouge, jaune) et desactiver le bouton verifier du même ligne
 function showColors(code) {
   var testResponse = game.testCombination(code);
   var testTableSelector = $(".test-table-" + previousGuesses.length);
@@ -610,7 +594,6 @@ function showColors(code) {
   return false;
 }
 
-// Tester la combinaison saisie par l'utilisateur
 function testCombination(combination) {
   return testCode(combination, solution);
 }
